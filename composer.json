@@ -1,0 +1,17 @@
+{
+    "name": "pzgull/cmsg1",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pierre DIMITRIOU",
+            "email": "dimitriou.pierrea@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Controller\\": "Controller/",
+            "Model\\": "Model/"
+        }
+    }
+}
