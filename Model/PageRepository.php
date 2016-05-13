@@ -36,19 +36,7 @@ class PageRepository
     public function selectOne($slug)
     {
         $query = "SELECT * FROM `page`
-        WHERE `slug`=':slug' LIMIT 1;";
-
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam('slug', $slug);
-
-        $stmt->execute();
-        return $stmt->fetchObject();
-    }
-
-    public function selectOne($slug)
-    {
-        $query = "SELECT * FROM `page`
-        WHERE `slug`=':slug' LIMIT 1;";
+        WHERE `slug`= :slug;";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam('slug', $slug);
@@ -66,7 +54,7 @@ class PageRepository
 
         $result = [];
 
-        while ($row = $stmt->fetch) {
+        while ($row = $stmt->fetchObject()) {
             $result[] = $row;
         }
 
@@ -76,7 +64,7 @@ class PageRepository
     public function delete($slug)
     {
         $query = "DELETE FROM `page`
-        WHERE `slug`=':slug';";
+        WHERE `slug`= :slug;";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam('slug', $slug);

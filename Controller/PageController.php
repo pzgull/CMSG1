@@ -5,11 +5,12 @@ use \Model\PageRepository;
 
 class PageController
 {
-    private $page;
+    private $repository;
 
     public function __construct(\PDO $pdo)
     {
-        $this->page = new PageRepository($pdo);
+        echo 'Page Controller' . PHP_EOL;
+        $this->repository = new PageRepository($pdo);
     }
 
     public function ajoutAction()
@@ -39,7 +40,18 @@ class PageController
 
     public function displayAction()
     {
-        // TODO: Implement displayAction
+        $slug = APP_DEFAULT_ROUTE;
+        if (isset($_GET['p'])) {
+            $slug = $_GET['p'];
+        }
+
+        $content = $this->repository->selectOne($slug);
+
+        if ($content) {
+            include_once APP_VIEW_DIR . '/display.php';
+        } else {
+            include_once APP_VIEW_DIR . '/404.php';
+        }
     }
 
 }
