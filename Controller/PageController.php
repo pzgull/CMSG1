@@ -38,6 +38,22 @@ class PageController
         // TODO: Use get (many) method from PageRepository
     }
 
+    public function makeNavbar($slug)
+    {
+      ob_start();
+      foreach ($this->repository->selectAll() as $page) {
+          $class = $page->slug === $slug ? 'class="active"' : '';
+          ?>
+            <li <?= $class ?>>
+              <a href="?p=<?= $page->slug ?>">
+                <?= $page->title ?>
+              </a>
+            </li>
+          <?php
+      }
+      return ob_end_flush();
+    }
+
     public function displayAction()
     {
         $slug = APP_DEFAULT_ROUTE;
