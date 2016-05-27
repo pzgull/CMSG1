@@ -98,7 +98,7 @@ class PageController
                 include_once APP_VIEW_DIR . '404.php';
                 die();
         }
-        $display = ob_end_flush();
+        $display = ob_get_clean();
         include_once APP_VIEW_DIR . 'display.php';
     }
 

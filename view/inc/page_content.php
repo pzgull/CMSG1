@@ -3,4 +3,4 @@
     <p><?= $content->body ?></p>
     <span class="label <?= $content->span_class ?>"><?= $content->span_text ?></span>
 </div>
-<img class="img-thumbnail" alt="<?= $content->title ?>" src="<?= APP_PUBLIC_DIR . 'img/' . $content->img ?>" data-holder-rendered="true">
+<img class="img-thumbnail" alt="<?= $content->title ?>" src="<?= PUBLIC_DIR . 'img/' . $content->img ?>" data-holder-rendered="true">
