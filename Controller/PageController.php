@@ -50,7 +50,7 @@ class PageController
             </li>
           <?php
       }
-      return ob_end_flush();
+      return ob_get_clean();
     }
 
     public function displayAction()
