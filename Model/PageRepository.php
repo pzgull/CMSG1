@@ -47,7 +47,7 @@ class PageRepository
 
     public function selectAll()
     {
-        $query = "SELECT * FROM `page`;";
+        $query = "SELECT `slug`, `title` FROM `page`;";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
