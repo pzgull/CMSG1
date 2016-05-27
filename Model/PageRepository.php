@@ -52,13 +52,7 @@ class PageRepository
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
 
-        $result = [];
-
-        while ($row = $stmt->fetchObject()) {
-            $result[] = $row;
-        }
-
-        return $result;
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
     }
 
     public function delete($slug)
