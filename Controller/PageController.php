@@ -9,7 +9,6 @@ class PageController
 
     public function __construct(\PDO $pdo)
     {
-        echo 'Page Controller' . PHP_EOL;
         $this->repository = new PageRepository($pdo);
     }
 
