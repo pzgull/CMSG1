@@ -7,6 +7,7 @@ define('DB_PASSWD', 'hetic');
 define('DB_CHARSET', 'utf8');
 // App Constants
 define('APP_DEFAULT_ROUTE', 'teletubbies');
+define('APP_DEFAULT_ACTION', 'lister');
 define('APP_ROOT_DIR', __DIR__ . '/');
 define('APP_VIEW_DIR', APP_ROOT_DIR . 'view/');
-define('APP_PUBLIC_DIR', APP_ROOT_DIR . 'public/');
+define('APP_PUBLIC_DIR', '/public/');
