@@ -9,7 +9,6 @@ class PageController
 
     public function __construct(\PDO $pdo)
     {
-        echo 'Page Controller' . PHP_EOL;
         $this->repository = new PageRepository($pdo);
     }
 
@@ -35,7 +34,11 @@ class PageController
 
     public function listeAction()
     {
-        // TODO: Use get (many) method from PageRepository
+        ob_start();
+        foreach ($this->repository->selectAll() as $page) {
+            include APP_VIEW_DIR . 'inc/list_item.php';
+        }
+        return ob_end_flush();
     }
 
     public function makeNavbar($slug)
@@ -43,13 +46,7 @@ class PageController
       ob_start();
       foreach ($this->repository->selectAll() as $page) {
           $class = $page->slug === $slug ? 'class="active"' : '';
-          ?>
-            <li <?= $class ?>>
-              <a href="?p=<?= $page->slug ?>">
-                <?= $page->title ?>
-              </a>
-            </li>
-          <?php
+          include APP_VIEW_DIR . 'inc/nav_item.php';
       }
       return ob_end_flush();
     }
@@ -60,14 +57,49 @@ class PageController
         if (isset($_GET['p'])) {
             $slug = $_GET['p'];
         }
-
         $content = $this->repository->selectOne($slug);
 
         if ($content) {
-            include_once APP_VIEW_DIR . '/display.php';
+            ob_start();
+            include APP_VIEW_DIR . 'inc/page_content.php';
+            $display = ob_end_flush();
+            include_once APP_VIEW_DIR . 'display.php';
         } else {
-            include_once APP_VIEW_DIR . '/404.php';
+            include_once APP_VIEW_DIR . '404.php';
         }
+    }
+    
+    public function adminAction()
+    {
+        $action = APP_DEFAULT_ACTION;
+        if (isset($_GET['a'])) {
+            $action = $_GET['a'];
+        }
+
+        ob_start();
+        switch ($action) {
+            case 'lister':
+                include APP_VIEW_DIR . 'inc/lister_content.php';
+                break;
+            case 'details':
+                include APP_VIEW_DIR . 'inc/details_content.php';
+                break;
+            case 'ajouter':
+                include APP_VIEW_DIR . 'inc/ajouter_content.php';
+                break;
+            case 'modifier':
+                include APP_VIEW_DIR . 'inc/modifier_content.php';
+                break;
+            case 'supprimer':
+                include APP_VIEW_DIR . 'inc/supprimer_content.php';
+                break;
+            default:
+                ob_end_clean();
+                include_once APP_VIEW_DIR . '404.php';
+                die();
+        }
+        $display = ob_end_flush();
+        include_once APP_VIEW_DIR . 'display.php';
     }
 
 }
