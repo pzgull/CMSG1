@@ -42,7 +42,7 @@ class PageController
         ob_start();
         foreach ($this->repository->selectAll() as $page) {
             $id++;
-            include APP_VIEW_DIR . 'inc/list_item.php';
+            include APP_VIEW_DIR . 'inc/chunk/list_item.php';
         }
         return ob_get_clean();
     }
@@ -52,7 +52,7 @@ class PageController
       ob_start();
       foreach ($this->repository->selectAll() as $page) {
           $class = $page->slug === $this->slug ? ' active ' : '';
-          include APP_VIEW_DIR . 'inc/nav_item.php';
+          include APP_VIEW_DIR . 'inc/chunk/nav_item.php';
       }
       return ob_get_clean();
     }
@@ -69,7 +69,7 @@ class PageController
         if ($content) {
             $this->pagetitle = $content->title;
             ob_start();
-            include APP_VIEW_DIR . 'inc/page_content.php';
+            include APP_VIEW_DIR . 'inc/page.php';
             $display = ob_get_clean();
             include_once APP_VIEW_DIR . 'display.php';
         } else {
@@ -89,27 +89,27 @@ class PageController
             case 'lister':
                 $content = $this->listerAction();
                 $this->pagetitle = 'Liste des Pages';
-                include APP_VIEW_DIR . 'inc/lister_content.php';
+                include APP_VIEW_DIR . 'inc/lister.php';
                 break;
             case 'details':
                 $content = $this->detailsAction($slug);
                 $this->pagetitle = 'Détail de la page ' . $content->title;
-                include APP_VIEW_DIR . 'inc/details_content.php';
+                include APP_VIEW_DIR . 'inc/details.php';
                 break;
             case 'ajouter':
                 $content = $this->ajouterAction();
                 $this->pagetitle = 'Ajouter une page';
-                include APP_VIEW_DIR . 'inc/ajouter_content.php';
+                include APP_VIEW_DIR . 'inc/ajouter.php';
                 break;
             case 'modifier':
                 $content = $this->modifierAction($slug);
                 $this->pagetitle = 'Modification de la page ' . $content->title;
-                include APP_VIEW_DIR . 'inc/modifier_content.php';
+                include APP_VIEW_DIR . 'inc/modifier.php';
                 break;
             case 'supprimer':
                 $content = $this->supprimerAction($slug);
                 $this->pagetitle = 'Suppression de la page ' . $content->title;
-                include APP_VIEW_DIR . 'inc/supprimer_content.php';
+                include APP_VIEW_DIR . 'inc/supprimer.php';
                 break;
             default:
                 ob_get_clean();
