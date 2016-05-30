@@ -8,3 +8,6 @@
     </tr>
     <?= $content ?>
 </table>
+<a class="btn btn-primary" href="/admin/?a=ajouter">
+    <i class="glyphicon glyphicon-plus"></i>&nbsp;Ajouter
+</a>

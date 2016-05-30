@@ -33,16 +33,49 @@ class PageController
 
     public function detailsAction()
     {
-        // TODO: Use get (one) method from PageRepository
+        $view = array(
+            'error' => APP_VIEW_DIR . 'inc/chunk/details_error.php',
+            'default' => APP_VIEW_DIR . 'inc/chunk/details_item.php'
+        );
+        ob_start();
+        if (!isset($_GET['id'])) {
+            $error = 'Paramètre ID manquant';
+            include $view['error'];
+            return ob_get_clean();
+        }
+        
+        $data = $this->repository->selectOneById($_GET['id']);
+        if (!$data) {
+            $error = 'Cette page n\'existe pas.';
+            include $view['error'];
+            return ob_get_clean();
+        }
+
+        $this->pagetitle = 'Détail de la page ' . $data->title;
+        include $view['default'];
+        return ob_get_clean();
     }
 
     public function listerAction()
     {
-        $id = 0;
+        $this->pagetitle = 'Liste des Pages';
+        $data = $this->repository->selectAll();
+        $view = array(
+            'error' => APP_VIEW_DIR . 'inc/chunk/lister_error.php',
+            'default' => APP_VIEW_DIR . 'inc/chunk/lister_item.php'
+        );
+
         ob_start();
-        foreach ($this->repository->selectAll() as $page) {
+        if (count($data) == 0) {
+            $error = 'Aucune page disponible';
+            include $view['error'];
+            return ob_get_clean();
+        }
+
+        $id = 0;
+        foreach ($data as $page) {
             $id++;
-            include APP_VIEW_DIR . 'inc/chunk/list_item.php';
+            include APP_VIEW_DIR . 'inc/chunk/lister_item.php';
         }
         return ob_get_clean();
     }
@@ -64,7 +97,7 @@ class PageController
         if (isset($_GET['p'])) {
             $this->slug = $_GET['p'];
         }
-        $content = $this->repository->selectOne($this->slug);
+        $content = $this->repository->selectOneBySlug($this->slug);
 
         if ($content) {
             $this->pagetitle = $content->title;
@@ -88,12 +121,10 @@ class PageController
         switch ($action) {
             case 'lister':
                 $content = $this->listerAction();
-                $this->pagetitle = 'Liste des Pages';
                 include APP_VIEW_DIR . 'inc/lister.php';
                 break;
             case 'details':
-                $content = $this->detailsAction($slug);
-                $this->pagetitle = 'Détail de la page ' . $content->title;
+                $content = $this->detailsAction();
                 include APP_VIEW_DIR . 'inc/details.php';
                 break;
             case 'ajouter':
@@ -102,12 +133,12 @@ class PageController
                 include APP_VIEW_DIR . 'inc/ajouter.php';
                 break;
             case 'modifier':
-                $content = $this->modifierAction($slug);
+                $content = $this->modifierAction();
                 $this->pagetitle = 'Modification de la page ' . $content->title;
                 include APP_VIEW_DIR . 'inc/modifier.php';
                 break;
             case 'supprimer':
-                $content = $this->supprimerAction($slug);
+                $content = $this->supprimerAction();
                 $this->pagetitle = 'Suppression de la page ' . $content->title;
                 include APP_VIEW_DIR . 'inc/supprimer.php';
                 break;

@@ -34,21 +34,35 @@ class PageRepository
         return $stmt->fetchObject();
     }
 
-    public function selectOne($slug)
+    public function selectOneById($id)
+    {
+        $query = "SELECT * FROM `page`
+        WHERE `id`= :id;";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $id);
+
+        $stmt->execute();
+        
+        return $stmt->fetchObject();
+    }
+
+    public function selectOneBySlug($slug)
     {
         $query = "SELECT * FROM `page`
         WHERE `slug`= :slug;";
 
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam('slug', $slug);
+        $stmt->bindParam(':slug', $slug);
 
         $stmt->execute();
+
         return $stmt->fetchObject();
     }
 
     public function selectAll()
     {
-        $query = "SELECT `slug`, `title` FROM `page`;";
+        $query = "SELECT `id`, `slug`, `title` FROM `page`;";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
@@ -56,13 +70,13 @@ class PageRepository
         return $stmt->fetchAll(\PDO::FETCH_OBJ);
     }
 
-    public function delete($slug)
+    public function delete($id)
     {
         $query = "DELETE FROM `page`
         WHERE `slug`= :slug;";
 
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam('slug', $slug);
+        $stmt->bindParam(':id', $id);
 
         $stmt->execute();
 
