@@ -4,6 +4,7 @@ namespace Model;
 class PageRepository
 {
     private $pdo;
+    private $slug;
 
     public function __construct(\PDO $pdo)
     {
@@ -47,18 +48,12 @@ class PageRepository
 
     public function selectAll()
     {
-        $query = "SELECT * FROM `page`;";
+        $query = "SELECT `slug`, `title` FROM `page`;";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
-
-        $result = [];
-
-        while ($row = $stmt->fetchObject()) {
-            $result[] = $row;
-        }
-
-        return $result;
+        
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
     }
 
     public function delete($slug)

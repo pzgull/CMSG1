@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?= $content->title ?></title>
+    <title><?= $this->pagetitle ?></title>
     <link href="<?= PUBLIC_BOOTSTRAP ?>/css/bootstrap.css" rel="stylesheet">
     <link href="<?= PUBLIC_BOOTSTRAP ?>/css/bootstrap-theme.min.css" rel="stylesheet">
 </head>
@@ -14,7 +14,7 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                <?= $this->makeNavbar($slug); ?>
+                  <?= $this->makeNavbar(); ?>
               </ul>
           </div>
       </div>
