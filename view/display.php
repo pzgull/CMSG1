@@ -14,7 +14,7 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                  <?= $this->makeNavbar(); ?>
+                  <?= $this->nav ?>
               </ul>
           </div>
       </div>

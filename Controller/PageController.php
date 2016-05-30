@@ -7,12 +7,15 @@ class PageController
 {
     private $repository;
     private $slug;
+    private $action;
     private $pagetitle;
+    private $nav;
 
     public function __construct(\PDO $pdo)
     {
         $this->repository = new PageRepository($pdo);
         $this->slug = '';
+        $this->action = '';
         $this->pagetitle = '';
     }
 
@@ -80,23 +83,43 @@ class PageController
         return ob_get_clean();
     }
 
-    public function makeNavbar()
+    public function makeNavbar($admin = false)
     {
-      ob_start();
-      foreach ($this->repository->selectAll() as $page) {
-          $class = $page->slug === $this->slug ? ' active ' : '';
-          include APP_VIEW_DIR . 'inc/chunk/nav_item.php';
-      }
-      return ob_get_clean();
+        $view = array(
+            'default' => APP_VIEW_DIR . 'inc/chunk/nav_item.php',
+            'admin' => APP_VIEW_DIR . 'inc/chunk/nav_admin.php'
+        );
+        ob_start();
+        if ($admin) {
+            $pages = array(
+                ['action' => 'lister', 'title' => 'Lister'],
+                ['action' => 'ajouter', 'title' => 'Ajouter']
+            );
+
+            foreach ($pages as $item => $page) {
+                $class = $page['action'] === $this->action ? ' active ' : '';
+                include $view['admin'];
+            }
+
+        } else {
+            foreach ($this->repository->selectAll() as $page) {
+                $class = $page->slug === $this->slug ? ' active ' : '';
+                include $view['default'];
+            }
+        }
+
+        return ob_get_clean();
     }
 
     public function displayAction()
     {
         $this->slug = APP_DEFAULT_ROUTE;
+        $this->nav = $this->makeNavbar();
 
         if (isset($_GET['p'])) {
             $this->slug = $_GET['p'];
         }
+
         $content = $this->repository->selectOneBySlug($this->slug);
 
         if ($content) {
@@ -112,13 +135,15 @@ class PageController
     
     public function adminAction()
     {
-        $action = APP_DEFAULT_ACTION;
+        $this->action = APP_DEFAULT_ACTION;
+        $this->nav = $this->makeNavbar(true);
+
         if (isset($_GET['a'])) {
-            $action = $_GET['a'];
+            $this->action = $_GET['a'];
         }
 
         ob_start();
-        switch ($action) {
+        switch ($this->action) {
             case 'lister':
                 $content = $this->listerAction();
                 include APP_VIEW_DIR . 'inc/lister.php';
