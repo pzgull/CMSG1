@@ -138,6 +138,7 @@ class PageController
         }
 
         $this->pagetitle = 'Détail de la page ' . $data->title;
+        $data->body = htmlentities($data->body);
         include $view['default'];
         return ob_get_clean();
     }
@@ -166,7 +167,7 @@ class PageController
         return ob_get_clean();
     }
 
-    public function makeNavbar($admin = false)
+    public function makeNavbar($admin)
     {
         $view = array(
             'default' => APP_VIEW_DIR . 'inc/chunk/nav_item.php',
@@ -180,13 +181,13 @@ class PageController
             );
 
             foreach ($pages as $item => $page) {
-                $class = $page['action'] === $this->action ? ' active ' : '';
+                $class = $page['action'] == $this->action ? ' active ' : '';
                 include $view['admin'];
             }
 
         } else {
             foreach ($this->repository->selectAll() as $page) {
-                $class = $page->slug === $this->slug ? ' active ' : '';
+                $class = $page->slug == $this->slug ? ' active ' : '';
                 include $view['default'];
             }
         }
@@ -197,16 +198,17 @@ class PageController
     public function displayAction()
     {
         $this->slug = APP_DEFAULT_ROUTE;
-        $this->nav = $this->makeNavbar();
 
         if (isset($_GET['p'])) {
             $this->slug = $_GET['p'];
         }
 
+        $this->nav = $this->makeNavbar(false);
+
         $content = $this->repository->selectOneBySlug($this->slug);
-        $content->body = htmlspecialchars_decode($content->body);
 
         if ($content) {
+            $content->body = htmlspecialchars_decode($content->body);
             $this->pagetitle = $content->title;
             ob_start();
             include APP_VIEW_DIR . 'inc/page.php';
