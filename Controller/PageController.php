@@ -19,9 +19,38 @@ class PageController
         $this->pagetitle = '';
     }
 
-    public function ajoutAction()
+    public function ajouterAction()
     {
-        // TODO: Use add method from PageRepository
+        $this->pagetitle = 'Ajouter une page';
+        
+        if (!isset($_POST['ajouter'])) {
+            return '';
+        }
+        
+        $requiredFields = ['title', 'h1', 'body', 'label-type', 'label-text'];
+        $undefined = count($requiredFields);
+        foreach (array_keys($_POST) as $key) {
+            if (in_array($key, $requiredFields)) {
+                $undefined--;
+            }
+        }
+        
+        ob_start();
+        if ($undefined) {
+            $message['type'] = 'danger';
+            $message['text'] = 'Il manque des champs!';
+        } else {
+            $page = $_POST;
+            $page['slug'] = strtolower($_POST['body']);
+            $page['img'] = 'snorkies.jpg';
+
+            $this->repository->create($page);
+            $message['type'] = 'success';
+            $message['text'] = 'Page ajoutée';
+        }
+        
+        include APP_VIEW_DIR . 'inc/chunk/form_message.php';
+        return ob_get_clean();
     }
 
     public function supprimerAction()
@@ -121,6 +150,7 @@ class PageController
         }
 
         $content = $this->repository->selectOneBySlug($this->slug);
+        $content->body = htmlspecialchars_decode($content->body);
 
         if ($content) {
             $this->pagetitle = $content->title;
@@ -154,7 +184,6 @@ class PageController
                 break;
             case 'ajouter':
                 $content = $this->ajouterAction();
-                $this->pagetitle = 'Ajouter une page';
                 include APP_VIEW_DIR . 'inc/ajouter.php';
                 break;
             case 'modifier':

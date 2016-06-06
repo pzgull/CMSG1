@@ -16,17 +16,18 @@ class PageRepository
         $query = "INSERT INTO `page` (
         `title`,`h1`,`body`,`img`,
         `span_class`, `span_text`, `slug`)
-        VALUES (
-        ':title', ':h1', ':body', ':img',
-        ':span_class', ':span_text', ':slug');";
+        VALUE (
+        :title, :h1, :body, :img,
+        :span_class, :span_text, :slug
+        );";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam('title', $params['title']);
         $stmt->bindParam('h1', $params['h1']);
         $stmt->bindParam('body', $params['body']);
         $stmt->bindParam('img', $params['img']);
-        $stmt->bindParam('span_class', $params['span_class']);
-        $stmt->bindParam('span_text', $params['span_text']);
+        $stmt->bindParam('span_class', $params['label-type']);
+        $stmt->bindParam('span_text', $params['label-text']);
         $stmt->bindParam('slug', $params['slug']);
 
         $stmt->execute();
