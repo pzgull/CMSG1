@@ -55,7 +55,19 @@ class PageController
 
     public function supprimerAction()
     {
-        // TODO: Use delete method from PageRepository
+        $this->pagetitle = 'Suppression d\'une page';
+
+        if (!isset($_GET['id'])) {
+            $message['type'] = 'danger';
+            $message['text'] = 'Aucune page spécifiée.';
+        } else {
+            $this->repository->delete($_GET['id']);
+            $message['type'] = 'success';
+            $message['text'] = 'La page a bien été supprimée';
+        }
+        ob_start();
+        include APP_VIEW_DIR . 'inc/chunk/form_message.php';
+        return ob_get_clean();
     }
 
     public function modifierAction()
@@ -234,7 +246,6 @@ class PageController
                 break;
             case 'supprimer':
                 $content = $this->supprimerAction();
-                $this->pagetitle = 'Suppression de la page ' . $content->title;
                 include APP_VIEW_DIR . 'inc/supprimer.php';
                 break;
             default:

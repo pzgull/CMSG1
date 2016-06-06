@@ -74,7 +74,7 @@ class PageRepository
     public function delete($id)
     {
         $query = "DELETE FROM `page`
-        WHERE `slug`= :slug;";
+        WHERE `id`= :id;";
 
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id', $id);
