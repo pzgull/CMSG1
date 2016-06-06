@@ -222,11 +222,12 @@ class PageController
     public function adminAction()
     {
         $this->action = APP_DEFAULT_ACTION;
-        $this->nav = $this->makeNavbar(true);
 
         if (isset($_GET['a'])) {
             $this->action = $_GET['a'];
         }
+
+        $this->nav = $this->makeNavbar(true);
 
         ob_start();
         switch ($this->action) {
