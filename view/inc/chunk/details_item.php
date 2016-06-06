@@ -22,7 +22,9 @@
 </tr>
 <tr>
     <td>Body</td>
-    <td><?= $data->body ?></td>
+    <td>
+        <pre><?= $data->body ?></pre>
+    </td>
 </tr>
 <tr>
     <td>Label</td>
