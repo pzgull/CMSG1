@@ -41,7 +41,7 @@ class PageController
             $message['text'] = 'Il manque des champs!';
         } else {
             $page = $_POST;
-            $page['slug'] = strtolower($_POST['body']);
+            $page['slug'] = strtolower($_POST['title']);
             $page['img'] = 'snorkies.jpg';
 
             $this->repository->create($page);
@@ -60,7 +60,49 @@ class PageController
 
     public function modifierAction()
     {
-        // TODO: Use update method from PageRepository
+        if (!isset($_GET['id'])) {
+            ob_start();
+            $message['type'] = 'danger';
+            $message['text'] = 'Aucune page n\'a été spécifiée.';
+            include APP_VIEW_DIR . 'inc/chunk/form_message.php';
+            return ob_get_clean();
+        } elseif (!isset($_POST['modifier'])) {
+            ob_start();
+            $page = $this->repository->selectOneById($_GET['id']);
+            $this->pagetitle = 'Modification de la page ' . $page->title;
+            foreach (['default', 'success', 'warning', 'danger'] as $label) {
+                $selected = '';
+                if ($page->span_class === 'label-' . $label) {
+                    $selected = ' checked ';
+                }
+                include APP_VIEW_DIR . 'inc/chunk/modifier_labels.php';
+            }
+            $labels = ob_get_clean();
+            ob_start();
+            include APP_VIEW_DIR . 'inc/chunk/modifier_form.php';
+            return ob_get_clean();
+        } else {
+            $requiredFields = ['title', 'h1', 'body', 'label-type', 'label-text'];
+            $undefined = count($requiredFields);
+            foreach (array_keys($_POST) as $key) {
+                if (in_array($key, $requiredFields)) {
+                    $undefined--;
+                }
+            }
+            $page = $_POST;
+            $page['id'] = $_GET['id'];
+            $page['slug'] = strtolower($_POST['title']);
+
+            $this->repository->update($page);
+
+            $message['type'] = 'success';
+            $message['text'] = 'Page modifiée';
+
+            ob_start();
+            include APP_VIEW_DIR . 'inc/chunk/form_message.php';
+            return ob_get_clean();
+        }
+        
     }
 
     public function detailsAction()
@@ -188,7 +230,6 @@ class PageController
                 break;
             case 'modifier':
                 $content = $this->modifierAction();
-                $this->pagetitle = 'Modification de la page ' . $content->title;
                 include APP_VIEW_DIR . 'inc/modifier.php';
                 break;
             case 'supprimer':

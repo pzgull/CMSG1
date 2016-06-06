@@ -1,7 +1,7 @@
-<a href="/admin/?=modifier&id=<?= $data->id ?>" class="btn btn-primary">
+<a href="/admin/?a=modifier&id=<?= $data->id ?>" class="btn btn-primary">
     <i class="glyphicon glyphicon-pencil"></i>&nbsp;Modifier
 </a>
-<a href="/admin/?=supprimer&id=<?= $data->id ?>" class="btn btn-danger">
+<a href="/admin/?a=supprimer&id=<?= $data->id ?>" class="btn btn-danger">
     <i class="glyphicon glyphicon-trash"></i>&nbsp;Supprimer
 </a>
 <tr>

@@ -84,4 +84,30 @@ class PageRepository
         return $stmt->fetchObject();
     }
 
+    public function update($params)
+    {
+        $query = "UPDATE `page`
+        SET
+        `slug` = :slug,
+        `title` = :title,
+        `h1` = :h1,
+        `body` = :body,
+        `span_class` = :span_class,
+        `span_text` = :span_text
+        WHERE `id` = :id;";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':slug', $params['slug']);
+        $stmt->bindParam(':title', $params['title']);
+        $stmt->bindParam(':h1', $params['h1']);
+        $stmt->bindParam(':body', $params['body']);
+        $stmt->bindParam(':span_class', $params['label-type']);
+        $stmt->bindParam(':span_text', $params['label-text']);
+        $stmt->bindParam(':id', $params['id']);
+        
+        $stmt->execute();
+        
+        return $stmt->fetchObject();
+    }
+
 }
